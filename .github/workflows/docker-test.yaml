@@ -1,0 +1,23 @@
+name: Flask Docker Test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      name: Checkout code
+
+    - name: Build and Run Docker container
+      run: |
+        docker build . -t hello-test:dev
+        docker run -d -p 127.0.0.1:5000:5000 hello-test:dev
+        sleep 5 # Wait for the server to start
+
+    - name: Install Python dependencies for testing
+      run: pip install requests
+
+    - name: Run test script
+      run: python test_service.py
